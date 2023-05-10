@@ -1,38 +1,29 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
 import Head from 'next/head';
-import Header from './header';
-import { useState } from 'react';
-import { green, purple } from '@material-ui/core/colors';
-
+import '../styles/globals.css';
 
 
 function App({ Component, pageProps }) {
-  const [darkMode, setDarkMode] = useState(false);
+  // const [darkMode, setDarkMode] = useState(false);
+
 
   const darkTheme = createTheme({
     palette: {
       mode: "dark",
-    }
+    },
   })
-  const lightTheme = createTheme({
-    palette: {
-      primary: {
-        main: '#9fa8da'
-      },
-      secondary: purple,
-    }
-  })
+  const lightTheme = createTheme({})
 
   return (
-    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-      <CssBaseline />
+    // <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+    <div>
       <Head>
-        <title>My new cool app</title>
+        <title>SimpSite</title>
       </Head>
-      <Header darkMode={darkMode} setDarkMode={setDarkMode} />
+      {/* <Header darkMode={darkMode} setDarkMode={setDarkMode} /> */}
       <Component {...pageProps} />
-    </ThemeProvider>
+    </div>
+    // </ThemeProvider>
   );
 }
 

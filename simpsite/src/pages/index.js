@@ -1,14 +1,18 @@
-import Link from "next/link";
+
+import Navbar from "./components/Navbar";
+import HomePage from "./components/HomePage";
+import Shorten from "./components/Shorten";
+import Ads from "./components/Ads";
+import Footer from "./components/Footer";
 
 function Home() {
   return (
     <div>
-      <h1>Home Page</h1>
-      <Link href='/about'>
-        <button>
-          hello
-        </button>
-      </Link>
+      <Navbar />
+      <HomePage />
+      <Shorten />
+      <Ads />
+      <Footer />
     </div>
   )
 }

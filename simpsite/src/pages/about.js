@@ -1,4 +1,6 @@
+import { Typography } from '@mui/material';
 import React, { useState, useEffect } from 'react';
+import Navbar from './components/Navbar';
 
 
 
@@ -19,7 +21,8 @@ function About() {
 
     return (
         <div>
-            <h1>{message}</h1>
+            <Navbar />
+            <Typography variant='h1' fontWeight='bold'>{message}hello</Typography>
         </div>
     );
 }
