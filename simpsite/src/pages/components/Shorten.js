@@ -47,7 +47,7 @@ const Shorten = () => {
                 {shortUrl && (
                     <div className='py-5 px-8 sm:py-5'>
                         <div className='bg-white ml-2 border-4 rounded-lg flex'>
-                            <p className='h-10 w-2/3'>Long Url: {longUrl}</p>
+                            <p className='h-10 w-2/3'>Original Url: {longUrl}</p>
                             <p className='h-10 w-1/3'>Short Url: {shortUrl}</p>
                         </div>
                     </div>
