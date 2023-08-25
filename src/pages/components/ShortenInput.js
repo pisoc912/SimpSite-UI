@@ -6,10 +6,13 @@ const ShortenInput = ({ addUrl }) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        const response = await fetch(`${API_BASE_URL}/encode`, {
+        const userinfo = window.localStorage.getItem('user')
+        const token = JSON.parse(userinfo).token
+        console.log(JSON.parse(userinfo));
+        const response = await fetch(`${API_BASE_URL}/simpsite/encode`, {
             method: 'POST',
             headers: {
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'text/plain',
             },
             body: value,
@@ -17,7 +20,7 @@ const ShortenInput = ({ addUrl }) => {
 
         if (response.ok) {
             const shortUrl = await response.text();
-            addUrl({ id: shortUrl, longUrl: value, shortUrl: shortUrl })
+            addUrl({ id: shortUrl, longUrl: value, shortUrl: shortUrl, userid: '3' })
             setValue("")
         } else {
             console.log("Failed to shorten URL")

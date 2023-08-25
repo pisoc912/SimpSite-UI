@@ -1,16 +1,31 @@
+
 import { GitHub, Google } from '@mui/icons-material';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import { getcookie, validateOauthUser, validateUser } from '../api/validateUser';
+import AuthService from '../api/AuthService';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 const LoginPage = () => {
     const router = useRouter()
+    const { data: session, status } = useSession()
+
     const API_BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL;
     const [user, setUser] = useState({
         email: '',
         password: '',
     });
+    useEffect(() => {
+
+        if (
+            status != "loading" &&
+            session &&
+            session?.error === "RefreshAccessTokenError"
+        ) {
+            signOut({ callbackUrl: "/" });
+        }
+    }, [session, status]);
 
     const handleChange = (e) => {
         setUser({
@@ -19,15 +34,27 @@ const LoginPage = () => {
         });
     };
 
+    // const handleLogin = (e) => {
+    //     e.preventDefault()
+    //     validateUser(user, router)
+    // }
     const handleLogin = (e) => {
-        e.preventDefault()
-        validateUser(user, router)
+        e.preventDefault();
+
+        AuthService.login(user.email, user.password)
+            .then(() => {
+                router.push('/');
+            })
+            .catch(err => {
+                const resMessage = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+                console.log(resMessage);
+            })
     }
 
     const handleOauth2 = async (provider) => {
         const oauthUrl = `${API_BASE_URL}/oauth2/authorization/${provider}`
         router.push(oauthUrl)
-        getcookie(user)
+        getcookie(user, router)
 
     }
 
@@ -93,6 +120,7 @@ const LoginPage = () => {
                             <button
                                 type="submit"
                                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                onClick={() => signIn('keycloak')}
                             >
                                 Sign in
                             </button>

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import ShortenInput from './ShortenInput'
 import ShortenForm from './ShortenForm'
 import { v4 as uuidv4 } from 'uuid';
+import Cookies from 'js-cookie';
+import { deleteUrl } from '../api/encodeUrl';
 
 const ShortenWrapper = () => {
 
@@ -17,7 +19,6 @@ const ShortenWrapper = () => {
             ...input,
             { id: uuidv4(), longUrl: url.longUrl, shortUrl: url.shortUrl }];
         setInput(newUrls)
-        console.log("input", input);
         localStorage.setItem('urls', JSON.stringify(newUrls))
     }
 
@@ -30,9 +31,11 @@ const ShortenWrapper = () => {
         }
     }
 
-    const handleDelete = (id) => {
+    const handleDelete = (id, url) => {
         const newUrls = input.filter(url => url.id !== id)
         setInput(newUrls)
+        console.log(url);
+        deleteUrl(url)
         localStorage.setItem('urls', JSON.stringify(newUrls))
     }
 

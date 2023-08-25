@@ -20,7 +20,7 @@ const ShortenForm = ({ input, onCopy, onDelete }) => {
             </div>
             <div className='flex mx-4 space-x-4'>
                 <ContentCopySharpIcon onClick={() => onCopy(input.shortUrl)} />
-                <ClearIcon onClick={() => onDelete(input.id)} />
+                <ClearIcon onClick={() => onDelete(input.id, input.shortUrl)} />
             </div>
         </div>
     )

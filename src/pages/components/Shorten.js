@@ -6,28 +6,10 @@ import ShortenWrapper from './ShortenWrapper';
 const Shorten = () => {
     const [longUrl, setLongUrl] = useState('')
     const [shortUrl, setShortUrl] = useState('')
-    const API_BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL;
-
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        const response = await fetch(`${API_BASE_URL}/encode`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'text/plain',
-            },
-            body: longUrl,
-        });
-
-        if (response.ok) {
-            const shortUrl = await response.text();
-            setShortUrl(shortUrl)
-        } else {
-            console.log("Failed to shorten URL")
-        }
-
-
+        encodeURI(longUrl, setShortUrl)
     }
 
     return (
