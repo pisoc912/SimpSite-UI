@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { registerUser } from '../api/registerUser';
+import AuthService from '../api/AuthService';
+import { Router, useRouter } from 'next/router';
 
 
 const RegisterPage = () => {
@@ -7,8 +9,10 @@ const RegisterPage = () => {
         username: '',
         email: '',
         pwd: '',
+        roles: []
     });
     const [error, setError] = useState('')
+    const router = useRouter()
 
     const handleChange = (e) => {
         setUser({
@@ -17,10 +21,22 @@ const RegisterPage = () => {
         });
     };
 
-    const handleRegister = async (e) => {
-        e.preventDefault();
-        console.log(user);
-        registerUser(user, setError)
+    // const handleRegister = async (e) => {
+    //     e.preventDefault();
+    //     console.log(user);
+    //     registerUser(user, setError)
+    // }
+
+    const handleRegister = (e) => {
+        e.preventDefault()
+        AuthService.register(user.username, user.email, user.pwd, user.roles)
+            .then(() => {
+                router.push("/login");
+            })
+            .catch(err => {
+                const resMessage = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+                setError(resMessage);
+            })
     }
     return (
         <>

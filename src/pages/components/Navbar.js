@@ -1,40 +1,37 @@
 import React, { useEffect, useState } from 'react'
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
 import CloseIcon from '@mui/icons-material/Close';
 import { validateUser } from '../api/validateUser';
 import registerUser from '../api/registerUser';
 import { useRouter } from 'next/router';
+import { AccountCircleOutlined } from '@mui/icons-material';
+import Cookies from 'js-cookie';
+import { signOut, useSession } from 'next-auth/react';
 
 const Navbar = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [username, setUsername] = useState('')
 
     const router = useRouter()
-
+    const { data: session, status } = useSession()
     useEffect(() => {
-        const userDetails = window.sessionStorage.getItem("userdetails")
-        const user = window.sessionStorage.getItem("user")
-        console.log(user);
-        console.log(userDetails);
-        const isLoggedIn = (userDetails !== null && userDetails !== undefined) || user !== null;
-        console.log(isLoggedIn);
-        setIsAuthenticated(isLoggedIn)
 
-        if (isLoggedIn) {
-            const parsedUserDetails = JSON.parse(userDetails || "{}");
-            const username = parsedUserDetails.username || user;
-            console.log("username:", username);
-            setUsername(username);
+        if (
+            status != "loading" &&
+            session &&
+            session?.error === "RefreshAccessTokenError"
+        ) {
+            signOut({ callbackUrl: "/" });
         }
-    }, [])
+    }, [session, status]);
 
-    const handleLogout = () => {
-        window.sessionStorage.removeItem('userdetails')
-        setIsAuthenticated(false)
-        router.push('/login')
+    async function keycloakSessionLogOut() {
+        try {
+            await fetch(`/api/auth/logout`, { method: "GET" })
+        } catch (err) {
+            console.log(err);
+        }
     }
-
-
 
     return (
         <div className='fixed top-0 w-full bg-white z-50'>
@@ -46,16 +43,16 @@ const Navbar = () => {
                     <a className='p-6 mr-8' href='/about'>About</a>
                 </ul>
                 <div className='flex flex-row w-1/3 justify-end items-center' >
-                    {isAuthenticated
+                    {session
                         ?
                         (<div className='flex items-center space-x-8' >
                             <a href="#" className="text-gray-700 hover:bg-gray-100" >
-                                <AccountCircleIcon className='mr-2 item' />Hello, {username}
+                                <AccountCircleOutlined className='mr-2 item' />Hello, {session.user.email}
                             </a>
                             <a href="/profile" className="text-gray-700 hover:bg-gray-100" >
-                                Profile
+                                History
                             </a>
-                            <a href="#" className="text-gray-400 hover:bg-gray-100" onClick={handleLogout}>
+                            <a href="#" className="text-gray-400 hover:bg-gray-100" onClick={() => (keycloakSessionLogOut().then(() => signOut({ callbackUrl: '/' })))}>
                                 Sign out
                             </a>
                         </div>)

@@ -1,5 +1,6 @@
 import Cookies from "js-cookie";
 
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 export const validateLoginDetails = async (user) => {
 
@@ -7,8 +8,8 @@ export const validateLoginDetails = async (user) => {
     console.log("set userdetails success");
 
 
-    const response = await fetch(`${API_BASE_URL}/user`, {
-        method: "GET",
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: "POST",
         headers: {
             'Authorization': 'Basic ' + window.btoa(user.email + ':' + user.password),
         },
@@ -39,6 +40,7 @@ export const validateUser = async (user, router) => {
     console.log("xsrf", xsrf);
     router.push("/")
 }
+
 
 export const getcookie = async (user) => {
     const xsrf = Cookies.get('XSRF-TOKEN');
